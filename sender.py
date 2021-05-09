@@ -1,5 +1,6 @@
 try :
     import pika
+    from sensor import Sensor
 except Exception as e :
     print("Some module is missing {}".format_map(e))
 class RabbitMQ(object):
@@ -10,14 +11,14 @@ class RabbitMQ(object):
         self._channel.queue_declare(queue=q)
     def publish(self , payload={}):
         self._channel.basic_publish(exchange='',
-        routing_key ='Hi',
+        routing_key ='testq',
         body = str(payload))
         print('Message published')
         self._connection.close()
 
 if __name__ == '__main__':
-    server = RabbitMQ(q='Hi')
-    server.publish(payload={'data':'This is the data'})
+    server = RabbitMQ(q='testq')
+    server.publish(payload=Sensor.get_values())
 
 
 
