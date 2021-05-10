@@ -22,13 +22,13 @@ class RabbitMQ(object):
 
 
 def callback(ch, method, properties, body ):
-    """
+    
     db = Database()
     obj = ast.literal_eval(body.decode('utf-8'))
     time= obj['time']
     data = obj['data']
     db.add_data(time=time ,data=data)
-    """
+
     try :
         db = Database()
         obj = ast.literal_eval(body.decode('utf-8'))
