@@ -8,11 +8,14 @@ class RabbitMQ(object):
         self._connection = pika.BlockingConnection(
           pika.ConnectionParameters(host='localhost'))
         self._channel = self._connection.channel()
-        self._channel.queue_declare(queue=q)
+        self._channel.queue_declare(queue=q , durable = True)
     def publish(self , payload={}):
         self._channel.basic_publish(exchange='',
         routing_key ='testq',
-        body = str(payload))
+        body = str(payload),
+        delivery_mode = 2
+        )
+
         print('Message published')
         self._connection.close()
 
