@@ -11,7 +11,7 @@ class RabbitMQ(object):
             pika.ConnectionParameters(host='localhost'))
 
         self._channel = self._connection.channel()
-        self._channel.queue_declare(queue=q)
+        self._channel.queue_declare(queue=q, durable = True)
         self._channel.basic_consume(queue=q,on_message_callback = callbackf)
    
     def consume(self):
@@ -36,6 +36,7 @@ def callback(ch, method, properties, body ):
         data = obj['data']
         db.add_data(time=time ,data=data)
         ch.basic_ack(delivery_tag = method.delivery_tag)
+        print(method.delivery_tag)
         print("[o] recived and uploaded  %r"%body)
     except Exception as e:
         print('Some problem has occured ')
