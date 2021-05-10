@@ -3,15 +3,19 @@ try:
     from pymongo import MongoClient
 except Exception as e:
     print('Some modules are missing')
-key = open('connect_key.txt','r').read
+key = open('connect_key.txt','r').read()
+
 class Database(object):
     def __init__(self,cluster_key=key,db_name='RabbitMQData',collection_name='data'):
-            self.cluster_key= cluster_key
-            self.db_name =db_name
-            self.collection_name = collection_name
-            self.cluster = MongoClient(cluster_key)
-            self.db = self.cluster[self.db_name]
-            self.collection = self.db[self.collection_name]
+           
+        self._cluster_key= cluster_key
+        self.db_name =db_name
+        self.collection_name = collection_name
+        self.cluster = MongoClient(self._cluster_key)
+        self.db = self.cluster[self.db_name]
+        self.collection = self.db[self.collection_name]
+           
+            
     def add_data(self,time,data):
         post ={
             '_id':self.collection.count_documents({}),
