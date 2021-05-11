@@ -6,7 +6,7 @@ except Exception as e :
     print("Some module is missing {}".format_map(e))
 
 class RabbitMQ(object):
-    def __init__(self,callbackf, exchange='myex'):
+    def __init__(self,callbackf, exchange='mydirex'):
        # Makes connection to given link
         self._connection = pika.BlockingConnection(
             pika.ConnectionParameters(host='localhost'))
@@ -50,7 +50,7 @@ def callback(ch, method, properties, body ):
         data = obj['data']
         db.add_data(time=time ,data=data)
         ch.basic_ack(delivery_tag = method.delivery_tag)
-        print(method.delivery_tag)
+        
         print("[o] recived and uploaded  %r"%body)
     except Exception as e:
         print('Some problem has occured ')
@@ -58,5 +58,5 @@ def callback(ch, method, properties, body ):
     
     
 if __name__ == '__main__':
-    rb = RabbitMQ(exchange='myex',callbackf=callback)
+    rb = RabbitMQ(exchange='mydirex',callbackf=callback)
     rb.consume()

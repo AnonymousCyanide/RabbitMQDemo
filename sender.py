@@ -4,7 +4,7 @@ try :
 except Exception as e :
     print("Some module is missing {}".format_map(e))
 class RabbitMQ(object):
-    def __init__(self, exchange ='myex'):
+    def __init__(self, exchange ='mydirex'):
         self._exchange = exchange
         # Makes connection to given link
         self._connection = pika.BlockingConnection(
@@ -26,7 +26,7 @@ class RabbitMQ(object):
         self._connection.close()
 
 if __name__ == '__main__':
-    server = RabbitMQ(exchange='myex')
+    server = RabbitMQ(exchange='mydirex')
     server.publish(payload=Sensor.get_values())
 
 
