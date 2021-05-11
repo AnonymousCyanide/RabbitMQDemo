@@ -6,7 +6,8 @@ except Exception as e :
     print("Some module is missing {}".format_map(e))
 
 class RabbitMQ(object):
-    def __init__(self,callbackf, exchange='mydirex'):
+    def __init__(self, callbackf , binding_key, exchange='mydirex'):
+        self._binding_key = binding_key
        # Makes connection to given link
         self._connection = pika.BlockingConnection(
             pika.ConnectionParameters(host='localhost'))
@@ -21,7 +22,7 @@ class RabbitMQ(object):
         # Makes a temporary queue
         self.q_name = self.result.method.queue
         # Binds this queue to exchange
-        self._channel.queue_bind(exchange =exchange , queue = self.q_name , routing_key = 'black')
+        self._channel.queue_bind(exchange =exchange , queue = self.q_name , routing_key = self._binding_key)
         # Specifies which q to consume from and calls the function mentioned 
         self._channel.basic_consume(queue= self.q_name, on_message_callback = callbackf)
    
@@ -58,5 +59,7 @@ def callback(ch, method, properties, body ):
     
     
 if __name__ == '__main__':
-    rb = RabbitMQ(exchange='mydirex',callbackf=callback)
+    print('Recive form ?')
+    binding_key = input()
+    rb = RabbitMQ(exchange='mydirex', binding_key= binding_key,callbackf=callback)
     rb.consume()
