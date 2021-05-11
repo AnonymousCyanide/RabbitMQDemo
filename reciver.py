@@ -12,14 +12,15 @@ class RabbitMQ(object):
             pika.ConnectionParameters(host='localhost'))
         # Creates channel out of the connection
         self._channel = self._connection.channel()
+        # declare exchange and exchange type
         self._channel.exchange_declare(exchange = exchange , exchange_type = 'fanout')
         
-        # Looks for queue to get info from 
+        # Get result to later get temp queue name
         # durable = True means data won't be lost 
         self.result = self._channel.queue_declare(queue= '', durable = True)
         # Makes a temporary queue
         self.q_name = self.result.method.queue
-
+        # Binds this queue to exchange
         self._channel.queue_bind(exchange =exchange , queue = self.q_name )
         # Specifies which q to consume from and calls the function mentioned 
         self._channel.basic_consume(queue= self.q_name, on_message_callback = callbackf)

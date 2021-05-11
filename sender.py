@@ -11,11 +11,10 @@ class RabbitMQ(object):
           pika.ConnectionParameters(host='localhost'))
         # Creates channel out of the connection
         self._channel = self._connection.channel()
-        # Looks for queue to put in message 
-        # durable = True means data won't be lost
+        # Makes an exchange and specifies it's type 
         self._channel.exchange_declare(exchange = exchange , exchange_type = 'fanout')
     def publish(self , payload={}):
-        # sends the payload to queue
+        # sends the payload to exchange
         self._channel.basic_publish(exchange= self._exchange,
         routing_key ='',
         body = str(payload)
