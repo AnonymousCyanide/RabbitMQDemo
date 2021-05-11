@@ -7,6 +7,7 @@ except Exception as e:
 class Sensor(object):
     def __init__(self):
         pass
+    # returns random value as data and current time as time
     def get_values():
         time = str(datetime.now())
         data = random.random()

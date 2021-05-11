@@ -7,15 +7,22 @@ except Exception as e :
 
 class RabbitMQ(object):
     def __init__(self,callbackf,q='testq'):
+       # Makes connection to given link
         self._connection = pika.BlockingConnection(
             pika.ConnectionParameters(host='localhost'))
-
+        # Creates channel out of the connection
         self._channel = self._connection.channel()
+        # Looks for queue to get info from 
+        # durable = True means data won't be lost 
         self._channel.queue_declare(queue=q, durable = True)
-        self._channel.basic_consume(queue=q,on_message_callback = callbackf)
+        # Specifies which q to consume from and calls the function mentioned 
+        self._channel.basic_consume(queue=q, on_message_callback = callbackf)
    
     def consume(self):
         print("[O] Waiting for message")
+        # makes sure one task is completed before taking another
+        self._channel.basic_qos(prefetch_count = 1)
+        # Starts accepting tasks
         self._channel.start_consuming()
 
 
