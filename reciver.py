@@ -13,7 +13,7 @@ class RabbitMQ(object):
         # Creates channel out of the connection
         self._channel = self._connection.channel()
         # declare exchange and exchange type
-        self._channel.exchange_declare(exchange = exchange , exchange_type = 'fanout')
+        self._channel.exchange_declare(exchange = exchange , exchange_type = 'direct')
         
         # Get result to later get temp queue name
         # durable = True means data won't be lost 

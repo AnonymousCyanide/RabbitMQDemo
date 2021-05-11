@@ -12,7 +12,7 @@ class RabbitMQ(object):
         # Creates channel out of the connection
         self._channel = self._connection.channel()
         # Makes an exchange and specifies it's type 
-        self._channel.exchange_declare(exchange = exchange , exchange_type = 'fanout')
+        self._channel.exchange_declare(exchange = exchange , exchange_type = 'direct')
     def publish(self , payload={}):
         # sends the payload to exchange
         self._channel.basic_publish(exchange= self._exchange,
