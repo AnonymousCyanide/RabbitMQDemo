@@ -21,7 +21,7 @@ class RabbitMQ(object):
         # Makes a temporary queue
         self.q_name = self.result.method.queue
         # Binds this queue to exchange
-        self._channel.queue_bind(exchange =exchange , queue = self.q_name )
+        self._channel.queue_bind(exchange =exchange , queue = self.q_name , routing_key = 'black')
         # Specifies which q to consume from and calls the function mentioned 
         self._channel.basic_consume(queue= self.q_name, on_message_callback = callbackf)
    

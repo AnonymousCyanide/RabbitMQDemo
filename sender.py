@@ -16,7 +16,7 @@ class RabbitMQ(object):
     def publish(self , payload={}):
         # sends the payload to exchange
         self._channel.basic_publish(exchange= self._exchange,
-        routing_key ='',
+        routing_key ='black',
         body = str(payload)
         
         )
