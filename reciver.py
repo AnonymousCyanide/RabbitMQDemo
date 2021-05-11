@@ -6,17 +6,23 @@ except Exception as e :
     print("Some module is missing {}".format_map(e))
 
 class RabbitMQ(object):
-    def __init__(self,callbackf,q='testq'):
+    def __init__(self,callbackf, exchange='myex'):
        # Makes connection to given link
         self._connection = pika.BlockingConnection(
             pika.ConnectionParameters(host='localhost'))
         # Creates channel out of the connection
         self._channel = self._connection.channel()
+        self._channel.exchange_declare(exchange = exchange , exchange_type = 'fanout')
+        
         # Looks for queue to get info from 
         # durable = True means data won't be lost 
-        self._channel.queue_declare(queue=q, durable = True)
+        self.result = self._channel.queue_declare(queue= '', durable = True)
+        # Makes a temporary queue
+        self.q_name = self.result.method.queue
+
+        self._channel.queue_bind(exchange =exchange , queue = self.q_name )
         # Specifies which q to consume from and calls the function mentioned 
-        self._channel.basic_consume(queue=q, on_message_callback = callbackf)
+        self._channel.basic_consume(queue= self.q_name, on_message_callback = callbackf)
    
     def consume(self):
         print("[O] Waiting for message")
@@ -51,5 +57,5 @@ def callback(ch, method, properties, body ):
     
     
 if __name__ == '__main__':
-    rb = RabbitMQ(q='testq',callbackf=callback)
+    rb = RabbitMQ(exchange='myex',callbackf=callback)
     rb.consume()
